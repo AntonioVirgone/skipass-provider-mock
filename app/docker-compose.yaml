@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: ./
+    links:
+      - db
+    ports:
+      - "5001:5000"
+  db:
+    image: mariadb:10.5.8
+    ports:
+      - "32000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/:ro
