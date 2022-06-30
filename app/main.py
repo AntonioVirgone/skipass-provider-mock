@@ -12,7 +12,7 @@ def enable(provider, cardCode):
     return status_code
 
 
-@app.route('/<provider>/card/<cardCode>/abilitation', methods=['GET'])
+@app.route('/<provider>/card/<cardCode>/abilitation', methods=['POST'])
 def enable(provider, cardCode):
     print(f'Mock enable request to {provider} by card {cardCode}')
 
