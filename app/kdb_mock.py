@@ -3,7 +3,6 @@ import json
 import flask
 from flask import Flask, Response
 from flask import request
-from setuptools._distutils.command.config import config
 
 app = Flask(__name__)
 
@@ -17,10 +16,10 @@ def login():
 
 
 @app.route('/api/services/thirdparty/tx/typeA/', methods=['POST'])
-def create_with_response_200():
+def create_transaction():
     serviceCode = int(request.json['serviceCode'])
 
-    if serviceCode == 100:
+    if serviceCode == 100 or serviceCode == 33:
         print(str(request.json['serviceCode']))
         return Response(json.dumps({
             "id": "KDB_806FF566-24C7-4BA1-8CB5-D53CE1828B00",
@@ -100,6 +99,101 @@ def create_with_response_200():
                               content_type='application/json')
     else:
         return flask.Response(status=400)
+
+
+@app.route('/api/services/thirdparty/tx/typeA/<transaction>', methods=['DELETE'])
+def delete_transaction(transaction):
+    return flask.Response(status=200)
+
+
+@app.route('/api-third-party/v1/users/profile/me/plafonds', methods=['GET'])
+def get_plafond():
+    return flask.Response(status=200)
+
+
+@app.route('/api/services/thirdparty/tx/any/<transaction>', methods=['GET'])
+def get_transaction(transaction):
+    return Response(json.dumps({
+        "id": "KDB_806FF566-24C7-4BA1-8CB5-D53CE1828B01",
+        "idCode": "2022-05-03",
+        "currency": "EUR",
+        "serviceCode": "33",
+        "merchantOrderId": "aaaa",
+        "amount": 1000,
+        "status": "PRENOTATA",
+        "creationDate": 1651575401731,
+        "updateDate": 1651575401543,
+        "plateNumber": "AB728JK",
+        "countryCode": "HR",
+        "statusDescription": "PRENOTATA",
+        "recorded": False,
+        "rejected": False,
+        "terminalId": "",
+        "pointOfService": {
+            "code": "3327",
+            "address": "Valtournenche",
+            "agreementCode": 3932,
+            "upperAgreementCode": "3932",
+            "serviceCode": "33",
+            "serviceCounterpartCode": "26019260",
+            "externalPointOfService": "24",
+            "description": "Valtournenche",
+            "upperAgreementName": "CERVINO SPA",
+            "agreementName": "CERVINO SPA",
+            "description2": "SKIDATA",
+            "description1": "Skipass - Valtournenche"
+        },
+        "details": [],
+        "attachments": [],
+        "startTime": 1651575401000
+    }), content_type='application/json')
+
+
+@app.route('/api/services/thirdparty/tx/typeA/<transaction>/authorize', methods=['POST'])
+def close_transaction(transaction):
+    if transaction == 'KDB_806FF566-24C7-4BA1-8CB5-D53CE1828B00':
+        return Response(json.dumps({
+            "id": "KDB_806FF566-24C7-4BA1-8CB5-D53CE1828B00",
+            "idCode": "2022-05-03",
+            "currency": "EUR",
+            "serviceCode": "33",
+            "merchantOrderId": "aaaa",
+            "amount": 1000,
+            "status": "PRENOTATA",
+            "creationDate": 1651575401731,
+            "updateDate": 1651575401543,
+            "plateNumber": "AB728JK",
+            "countryCode": "HR",
+            "statusDescription": "PRENOTATA",
+            "recorded": False,
+            "rejected": False,
+            "terminalId": "",
+            "pointOfService": {
+                "code": "3327",
+                "address": "Valtournenche",
+                "agreementCode": 3932,
+                "upperAgreementCode": "3932",
+                "serviceCode": "33",
+                "serviceCounterpartCode": "26019260",
+                "externalPointOfService": "24",
+                "description": "Valtournenche",
+                "upperAgreementName": "CERVINO SPA",
+                "agreementName": "CERVINO SPA",
+                "description2": "SKIDATA",
+                "description1": "Skipass - Valtournenche"
+            },
+            "details": [],
+            "attachments": [],
+            "startTime": 1651575401000
+        }), content_type='application/json')
+    else:
+        return flask.Response(status=403,
+                              response=json.dumps(
+                                  {"code": 403, "message": "",
+                                   "details": {
+                                       "kdbErrorResponse": {"code": "REQUEST_BOOKING_KAA_NOT_AUTHORIZED_ERROR_599",
+                                                            "description": "Lorem ipsum"}}}),
+                              content_type='application/json')
 
 
 if __name__ == '__main__':
